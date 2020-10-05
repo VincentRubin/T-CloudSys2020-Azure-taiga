@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_taigaDB_name": {
+            "defaultValue": "taigaDB",
+            "type": "String"
+        },
+        "disks_taigaDB_OsDisk_1_c62302af581443b5bbcd993a1704757e_externalid": {
+            "defaultValue": "/subscriptions/69e48f32-2d3e-4ed6-aa25-e5ab9bbd59de/resourceGroups/TAIGADB_GROUP/providers/Microsoft.Compute/disks/taigaDB_OsDisk_1_c62302af581443b5bbcd993a1704757e",
+            "type": "String"
+        },
+        "networkInterfaces_taigadb82_externalid": {
+            "defaultValue": "/subscriptions/69e48f32-2d3e-4ed6-aa25-e5ab9bbd59de/resourceGroups/taigaDB_group/providers/Microsoft.Network/networkInterfaces/taigadb82",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_taigaDB_name')]",
+            "location": "switzerlandnorth",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "debian",
+                        "offer": "debian-10",
+                        "sku": "10",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_taigaDB_name'), '_OsDisk_1_c62302af581443b5bbcd993a1704757e')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('disks_taigaDB_OsDisk_1_c62302af581443b5bbcd993a1704757e_externalid')]"
+                        },
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_taigaDB_name')]",
+                    "adminUsername": "azureadmin",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/azureadmin/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDOW/8ze+2i6UfB92QE+PHSqIcP\r\n1vIJohF34FE2ewvf5H1H/YQvp6O0y38VmAP51wxAfa6AEUIaQhmsvdIvVdBdb/b+\r\nrHAcOjx/kT+DIWYYgmkLrq5DW55L3ESZWs/les28sxEd5RXAssE2DMCiLZul4NpU\r\ndfd1xhmuKhwvMb/FwFzkwpjrH5AEijYnNil+ow/Adi/YhjaT3dpptay8ZgTp+IR1\r\n5CDZKtPQqum9TdfcegritOtptjQYMY62j7tFianvJIDfWA8Sl91OVhRpel+6Gnj9\r\nfdRn7zAqTrFYbS87HagvEYgc/eiEeJzrTti81W8yV6LX5pXXzcwOZDZWtpTWWXlX\r\nhJANcLCpNmy/Bx+bhfvmjKAQzSjOeQ7VjLwrsbLHu9jcErnRbgb0IYk0DGyB3kJS\r\nRzg1teHYSDLuUaPf+DQOnclTRabABEy0R0n8vzfKmxLBbS3jbi1QujJe9dg43WYP\r\nrvf4EcVx0ViVYWzjTe9I5LVht1QKCeDeDYvl6Cs= generated-by-azure\r\n"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_taigadb82_externalid')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,81 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_taigaFront_name": {
+            "defaultValue": "taigaFront",
+            "type": "String"
+        },
+        "disks_taigaFront_OsDisk_1_e0389f4b076e42e4b5481b1ff4c647db_externalid": {
+            "defaultValue": "/subscriptions/69e48f32-2d3e-4ed6-aa25-e5ab9bbd59de/resourceGroups/TAIGAFRONT_GROUP/providers/Microsoft.Compute/disks/taigaFront_OsDisk_1_e0389f4b076e42e4b5481b1ff4c647db",
+            "type": "String"
+        },
+        "networkInterfaces_taigafront105_externalid": {
+            "defaultValue": "/subscriptions/69e48f32-2d3e-4ed6-aa25-e5ab9bbd59de/resourceGroups/taigaFront_group/providers/Microsoft.Network/networkInterfaces/taigafront105",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_taigaFront_name')]",
+            "location": "switzerlandnorth",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "debian",
+                        "offer": "debian-10",
+                        "sku": "10",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_taigaFront_name'), '_OsDisk_1_e0389f4b076e42e4b5481b1ff4c647db')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[parameters('disks_taigaFront_OsDisk_1_e0389f4b076e42e4b5481b1ff4c647db_externalid')]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_taigaFront_name')]",
+                    "adminUsername": "azuradmin",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/azuradmin/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCIKs5V7ksMvPB8YAxFncBrOr07\r\n9sAbVQLvfMkuU6SHAW18k1YIp12MSzvBZhjBS9m7AD6WziiVdXjDBhV4SxlJq3RV\r\nop+scUtbysB3mQdRBvWqcY8W2kY2Tj+TDulyCQQnhYYkx5ezPQcLzFbzfsnKb2Fq\r\nNxNQu6jWuha5wIJg1XAj2AlCVFXbPp9XlrptFJVUmJKbvJBHilYPgtx1CC0h0ZHW\r\nNuhucK19Cd9CzQgRPV0rEkPw+jMkYRrHtfKzf35RNsWavXzGzlrvUTne1q0yOmEV\r\nL+qgoGYNRKMNpRpJrcjZ+2ZvuIxXbUxnzWnxXaIkGiSwI+1STp2c74kyVj3qyZF9\r\nmdvvGhKckjBnYkBrdDO4thzQ4Zdg2EJLXZeWKk/0MBqh5fth/Mtb6+GERKiJkWRq\r\nwRfdGQbIoEu7zFAqgGJifVmTH9npKnsKUTz+S9FQJ9JzZywD9oZS9KgDbje36Vt2\r\nrM41cQgdhaw0OQJN9kQVQmtp/gfL9EELpxL8Z0c= generated-by-azure\r\n"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_taigafront105_externalid')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    ]
+}
